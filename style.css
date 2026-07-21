@@ -388,6 +388,10 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+#btn-quit-break {
+  margin-top: 10px;
+}
+
 /* ---------- Result screen ---------- */
 
 .result-chart-wrap {

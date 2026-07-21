@@ -1,0 +1,478 @@
+/* =========================================================
+   内田クレペリン検査 練習サイト - スタイルシート
+   落ち着いた、学校の授業でも使えるようなまじめなデザイン
+========================================================= */
+
+:root {
+  --color-bg: #f4f5f7;
+  --color-surface: #ffffff;
+  --color-border: #d5d9e0;
+  --color-primary: #2f5d8a;
+  --color-primary-dark: #244a6e;
+  --color-text: #2a2e35;
+  --color-text-sub: #5b6270;
+  --color-accent-1: #2f5d8a;  /* 前半 */
+  --color-accent-2: #b5651d;  /* 後半 */
+  --color-danger: #b03030;
+  --color-ok: #2f7d4f;
+  --radius: 6px;
+  --font-main: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-main);
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ---------- Header / Footer ---------- */
+
+.site-header {
+  background: var(--color-primary);
+  color: #fff;
+  padding: 14px 20px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+
+.site-header h1 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.site-footer {
+  text-align: center;
+  padding: 14px 10px;
+  font-size: 0.78rem;
+  color: var(--color-text-sub);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+/* ---------- Layout / Screens ---------- */
+
+#app {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 14px 40px;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.screen {
+  display: none;
+}
+
+.screen.active {
+  display: block;
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.card h2 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: 8px;
+  margin-bottom: 20px;
+}
+
+.center-card {
+  text-align: center;
+}
+
+/* ---------- Start screen ---------- */
+
+.mode-select {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+
+.mode-option {
+  flex: 1 1 220px;
+  cursor: pointer;
+}
+
+.mode-option input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.mode-box {
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.mode-box strong {
+  font-size: 1.05rem;
+}
+
+.mode-box span {
+  font-size: 0.85rem;
+  color: var(--color-text-sub);
+}
+
+.mode-option input:checked + .mode-box {
+  border-color: var(--color-primary);
+  background: #eaf1f8;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+  font-size: 0.95rem;
+}
+
+.setting-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+
+.start-actions {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  padding: 12px 30px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-dark);
+}
+
+.instructions {
+  border-top: 1px solid var(--color-border);
+  padding-top: 16px;
+  font-size: 0.88rem;
+  color: var(--color-text-sub);
+}
+
+.instructions h3 {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+  color: var(--color-text);
+}
+
+.instructions code {
+  background: #eef0f3;
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+/* ---------- Test screen ---------- */
+
+.test-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 10px 16px;
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.test-info {
+  display: flex;
+  gap: 16px;
+  font-weight: 600;
+}
+
+#phase-label {
+  color: var(--color-primary);
+}
+
+.test-timer {
+  font-variant-numeric: tabular-nums;
+}
+
+#time-remain {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--color-primary);
+}
+
+.btn-quit {
+  background: #fff;
+  color: var(--color-text-sub);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.btn-quit:hover {
+  background: #fbe9e9;
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.test-area {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 16px;
+  overflow-x: auto;
+  margin-bottom: 100px; /* モバイルキーパッド分の余白 */
+}
+
+.krow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 0;
+  border-bottom: 1px dashed #e3e5e9;
+  white-space: nowrap;
+}
+
+.krow:last-child {
+  border-bottom: none;
+}
+
+.krow.row-current {
+  background: #fff9e6;
+}
+
+.krow.row-done {
+  opacity: 0.55;
+}
+
+.krow-label {
+  flex: 0 0 34px;
+  font-size: 0.75rem;
+  color: var(--color-text-sub);
+}
+
+.digit-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 26px;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.digit-input {
+  width: 22px;
+  height: 26px;
+  text-align: center;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  font-size: 0.95rem;
+  padding: 0;
+  background: #fff;
+  font-family: var(--font-main);
+}
+
+.digit-input.focused {
+  border: 2px solid var(--color-primary);
+  background: #fff3b0;
+  box-shadow: 0 0 0 3px rgba(47,93,138,0.35);
+  transform: scale(1.15);
+  z-index: 2;
+  position: relative;
+  animation: focus-pulse 1s ease-in-out infinite;
+}
+
+@keyframes focus-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 3px rgba(47,93,138,0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(47,93,138,0.15);
+  }
+}
+
+.digit-input.correct {
+  background: #e7f5eb;
+  border-color: var(--color-ok);
+}
+
+.digit-input.wrong {
+  background: #fbe9e9;
+  border-color: var(--color-danger);
+}
+
+/* ---------- Mobile keypad ---------- */
+
+.mobile-keypad {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  padding: 10px;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  box-shadow: 0 -2px 6px rgba(0,0,0,0.08);
+  z-index: 50;
+}
+
+.mobile-keypad button {
+  padding: 14px 0;
+  font-size: 1.2rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: #f8f9fb;
+  color: var(--color-text);
+}
+
+.mobile-keypad button:active {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.key-back {
+  grid-column: span 1;
+  color: var(--color-danger) !important;
+}
+
+/* ---------- Break screen ---------- */
+
+.break-timer {
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 20px 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Result screen ---------- */
+
+.result-chart-wrap {
+  margin-bottom: 24px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.stat-box {
+  background: #f8f9fb;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 14px;
+  text-align: center;
+}
+
+.stat-box .stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  display: block;
+}
+
+.stat-box .stat-label {
+  font-size: 0.8rem;
+  color: var(--color-text-sub);
+}
+
+.feedback-box {
+  background: #eef4ea;
+  border: 1px solid #cfe0c7;
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 24px;
+  font-size: 0.95rem;
+}
+
+.feedback-box h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  color: var(--color-ok);
+}
+
+.feedback-box ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.result-actions {
+  text-align: center;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 720px) {
+  .site-header h1 {
+    font-size: 1.05rem;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .mobile-keypad {
+    display: grid;
+  }
+
+  .test-area {
+    margin-bottom: 190px;
+  }
+
+  .digit-num, .digit-input {
+    width: 20px;
+    height: 24px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (min-width: 721px) {
+  .mobile-keypad {
+    display: none !important;
+  }
+}

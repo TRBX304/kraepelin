@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>内田クレペリン検査 練習サイト</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <h1>内田クレペリン検査 練習サイト</h1>
+</header>
+
+<main id="app">
+
+  <!-- ============ スタート画面 ============ -->
+  <section id="screen-start" class="screen active">
+    <div class="card">
+      <h2>モードを選択してください</h2>
+
+      <div class="mode-select">
+        <label class="mode-option">
+          <input type="radio" name="mode" value="honban" checked>
+          <div class="mode-box">
+            <strong>本番モード</strong>
+            <span>前半15分 → 休憩 → 後半15分</span>
+          </div>
+        </label>
+        <label class="mode-option">
+          <input type="radio" name="mode" value="renshu">
+          <div class="mode-box">
+            <strong>練習モード</strong>
+            <span>休憩なし 5分間</span>
+          </div>
+        </label>
+      </div>
+
+      <div class="setting-row">
+        <label for="sound-toggle">通知音（1分ごと）</label>
+        <input type="checkbox" id="sound-toggle" checked>
+      </div>
+
+      <div class="start-actions">
+        <button id="btn-start" class="btn-primary">検査を開始する</button>
+      </div>
+
+      <div class="instructions">
+        <h3>やり方</h3>
+        <p>
+          画面に並んだ数字を、隣り合う2つずつ足し算し、その答えの一の位（下1桁）の数字を、
+          下にある解答欄に入力していきます。<br>
+          例：<code>3 5 8 2</code> → 3+5=8 → 5+8=13(一の位「3」) → 8+2=10(一の位「0」)<br>
+          1分経過するごとに音が鳴り、自動的に次の行へ移動します。最後まで、できるだけ速く正確に解いてください。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 検査画面 ============ -->
+  <section id="screen-test" class="screen">
+    <div class="test-topbar">
+      <div class="test-info">
+        <span id="phase-label">前半</span>
+        <span id="row-label">行 1 / 15</span>
+      </div>
+      <div class="test-timer">
+        残り時間 <span id="time-remain">01:00</span>
+      </div>
+      <button id="btn-quit" class="btn-quit" type="button">ホームに戻る</button>
+    </div>
+
+    <div class="test-area" id="test-area">
+      <!-- 行はJSで動的生成 -->
+    </div>
+
+    <!-- スマホ用テンキー -->
+    <div class="mobile-keypad" id="mobile-keypad">
+      <button data-key="1">1</button>
+      <button data-key="2">2</button>
+      <button data-key="3">3</button>
+      <button data-key="4">4</button>
+      <button data-key="5">5</button>
+      <button data-key="6">6</button>
+      <button data-key="7">7</button>
+      <button data-key="8">8</button>
+      <button data-key="9">9</button>
+      <button data-key="0">0</button>
+      <button data-key="back" class="key-back">←</button>
+    </div>
+  </section>
+
+  <!-- ============ 休憩画面 ============ -->
+  <section id="screen-break" class="screen">
+    <div class="card center-card">
+      <h2>休憩中</h2>
+      <p>少し休んで、後半に備えましょう。</p>
+      <div class="break-timer" id="break-timer">01:00</div>
+    </div>
+  </section>
+
+  <!-- ============ 結果画面 ============ -->
+  <section id="screen-result" class="screen">
+    <div class="card">
+      <h2>検査結果</h2>
+
+      <div class="result-chart-wrap">
+        <canvas id="result-chart" height="260"></canvas>
+      </div>
+
+      <div class="stats-grid" id="stats-grid">
+        <!-- JSで生成 -->
+      </div>
+
+      <div class="feedback-box" id="feedback-box">
+        <!-- JSで生成 -->
+      </div>
+
+      <div class="result-actions">
+        <button id="btn-retry" class="btn-primary">もう一度挑戦する</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <p>本サイトはブラウザ内のみで完結する練習用ツールです。データは保存されません。</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="js/sound.js"></script>
+<script src="js/test-engine.js"></script>
+<script src="js/chart-render.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

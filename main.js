@@ -17,7 +17,10 @@
   const btnStart = document.getElementById("btn-start");
   const btnRetry = document.getElementById("btn-retry");
   const btnQuit = document.getElementById("btn-quit");
+  const btnQuitBreak = document.getElementById("btn-quit-break");
   const soundToggle = document.getElementById("sound-toggle");
+  const breakDurationSelect = document.getElementById("break-duration");
+  const breakDurationRow = document.getElementById("break-duration-row");
 
   const phaseLabel = document.getElementById("phase-label");
   const rowLabel = document.getElementById("row-label");
@@ -32,11 +35,15 @@
 
   // ---------- アプリ状態 ----------
   let selectedMode = "honban";
+  let selectedBreakDuration = 300; // 秒。スタート画面で選択（デフォルト5分）
+
+  // タイマーはDate.now()ベースの終了予定時刻を保持し、
+  // setIntervalの間引き（バックグラウンドタブ等）によるドリフトを防ぐ。
   let rowTimerId = null;
-  let rowSecondsLeft = KraepelinEngine.SEC_PER_ROW;
+  let rowEndAt = null; // 行タイマーの終了予定時刻(ms)
 
   let breakTimerId = null;
-  let breakSecondsLeft = 60; // 休憩は1分固定（仕様上1〜2分の範囲、ここでは1分に設定）
+  let breakEndAt = null; // 休憩タイマーの終了予定時刻(ms)
 
   // ---------- 画面切り替え ----------
   function showScreen(name) {
@@ -45,11 +52,22 @@
   }
 
   // ---------- スタート画面 ----------
+  function updateBreakRowVisibility() {
+    breakDurationRow.style.display = selectedMode === "honban" ? "flex" : "none";
+  }
+
   document.querySelectorAll('input[name="mode"]').forEach(radio => {
     radio.addEventListener("change", (e) => {
       selectedMode = e.target.value;
+      updateBreakRowVisibility();
     });
   });
+
+  breakDurationSelect.addEventListener("change", () => {
+    selectedBreakDuration = parseInt(breakDurationSelect.value, 10);
+  });
+
+  updateBreakRowVisibility();
 
   soundToggle.addEventListener("change", () => {
     KraepelinSound.setEnabled(soundToggle.checked);
@@ -64,17 +82,17 @@
     showScreen("start");
   });
 
-  btnQuit.addEventListener("click", () => {
+  function quitToStart() {
     const confirmed = window.confirm("検査を中断してホーム画面に戻りますか？\n（ここまでの結果は保存されません）");
     if (!confirmed) return;
 
     clearRowTimer();
-    if (breakTimerId) {
-      clearInterval(breakTimerId);
-      breakTimerId = null;
-    }
+    clearBreakTimer();
     showScreen("start");
-  });
+  }
+
+  btnQuit.addEventListener("click", quitToStart);
+  btnQuitBreak.addEventListener("click", quitToStart);
 
   // ---------- 検査開始 ----------
   function startTest(mode) {
@@ -181,19 +199,25 @@
   }
 
   // ---------- タイマー ----------
+  // Date.now()ベースの「終了予定時刻」方式でドリフトを防ぐ。
+  // setIntervalは表示更新のトリガーとしてのみ使用し、
+  // 実際の残り秒数は毎回 (endAt - Date.now()) から計算する。
   function startRowTimer() {
     clearRowTimer();
-    rowSecondsLeft = KraepelinEngine.SEC_PER_ROW;
+    rowEndAt = Date.now() + KraepelinEngine.SEC_PER_ROW * 1000;
     updateTimeDisplay();
 
     rowTimerId = setInterval(() => {
-      rowSecondsLeft--;
-      updateTimeDisplay();
+      const remainMs = rowEndAt - Date.now();
 
-      if (rowSecondsLeft <= 0) {
+      if (remainMs <= 0) {
+        updateTimeDisplay(0);
         onRowTimeUp();
+        return;
       }
-    }, 1000);
+
+      updateTimeDisplay(Math.ceil(remainMs / 1000));
+    }, 250);
   }
 
   function clearRowTimer() {
@@ -203,9 +227,13 @@
     }
   }
 
-  function updateTimeDisplay() {
-    const m = Math.floor(rowSecondsLeft / 60).toString().padStart(2, "0");
-    const s = (rowSecondsLeft % 60).toString().padStart(2, "0");
+  function updateTimeDisplay(secondsLeftOverride) {
+    const secondsLeft = secondsLeftOverride !== undefined
+      ? secondsLeftOverride
+      : Math.max(0, Math.ceil((rowEndAt - Date.now()) / 1000));
+
+    const m = Math.floor(secondsLeft / 60).toString().padStart(2, "0");
+    const s = (secondsLeft % 60).toString().padStart(2, "0");
     timeRemainEl.textContent = `${m}:${s}`;
   }
 
@@ -238,25 +266,38 @@
   // ---------- 休憩 ----------
   function startBreak() {
     showScreen("break");
-    breakSecondsLeft = 60;
+    breakEndAt = Date.now() + selectedBreakDuration * 1000;
     updateBreakDisplay();
 
     breakTimerId = setInterval(() => {
-      breakSecondsLeft--;
-      updateBreakDisplay();
+      const remainMs = breakEndAt - Date.now();
 
-      if (breakSecondsLeft <= 0) {
-        clearInterval(breakTimerId);
-        breakTimerId = null;
+      if (remainMs <= 0) {
+        updateBreakDisplay(0);
+        clearBreakTimer();
         KraepelinSound.playBreakEndSignal();
         resumeAfterBreak();
+        return;
       }
-    }, 1000);
+
+      updateBreakDisplay(Math.ceil(remainMs / 1000));
+    }, 250);
   }
 
-  function updateBreakDisplay() {
-    const m = Math.floor(breakSecondsLeft / 60).toString().padStart(2, "0");
-    const s = (breakSecondsLeft % 60).toString().padStart(2, "0");
+  function clearBreakTimer() {
+    if (breakTimerId) {
+      clearInterval(breakTimerId);
+      breakTimerId = null;
+    }
+  }
+
+  function updateBreakDisplay(secondsLeftOverride) {
+    const secondsLeft = secondsLeftOverride !== undefined
+      ? secondsLeftOverride
+      : Math.max(0, Math.ceil((breakEndAt - Date.now()) / 1000));
+
+    const m = Math.floor(secondsLeft / 60).toString().padStart(2, "0");
+    const s = (secondsLeft % 60).toString().padStart(2, "0");
     breakTimerEl.textContent = `${m}:${s}`;
   }
 

@@ -80,8 +80,11 @@ const KraepelinEngine = (() => {
 
   function isHalfway() {
     // 本番モードにおいて、前半が終わるタイミングか
+    // ※ この関数は moveToNextRow() 内で currentRowIndex をインクリメントする「前」に
+    //    呼ばれるため、「15行目(index=14)を解き終えた瞬間」を判定するには
+    //    ROWS_PER_HALF - 1 と比較する必要がある。
     if (state.mode !== "honban") return false;
-    return state.currentRowIndex === ROWS_PER_HALF;
+    return state.currentRowIndex === ROWS_PER_HALF - 1;
   }
 
   // 現在の行がどちらのフェーズに属するか判定（結果グラフ色分け用）

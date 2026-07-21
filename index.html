@@ -41,8 +41,17 @@
         <input type="checkbox" id="sound-toggle" checked>
       </div>
 
+      <div class="setting-row" id="break-duration-row">
+        <label for="break-duration">休憩時間（本番モード）</label>
+        <select id="break-duration">
+          <option value="60">1分</option>
+          <option value="120">2分</option>
+          <option value="300" selected>5分</option>
+        </select>
+      </div>
+
       <div class="start-actions">
-        <button id="btn-start" class="btn-primary">検査を開始する</button>
+        <button id="btn-start" class="btn-primary" type="button">検査を開始する</button>
       </div>
 
       <div class="instructions">
@@ -76,17 +85,17 @@
 
     <!-- スマホ用テンキー -->
     <div class="mobile-keypad" id="mobile-keypad">
-      <button data-key="1">1</button>
-      <button data-key="2">2</button>
-      <button data-key="3">3</button>
-      <button data-key="4">4</button>
-      <button data-key="5">5</button>
-      <button data-key="6">6</button>
-      <button data-key="7">7</button>
-      <button data-key="8">8</button>
-      <button data-key="9">9</button>
-      <button data-key="0">0</button>
-      <button data-key="back" class="key-back">←</button>
+      <button data-key="1" type="button">1</button>
+      <button data-key="2" type="button">2</button>
+      <button data-key="3" type="button">3</button>
+      <button data-key="4" type="button">4</button>
+      <button data-key="5" type="button">5</button>
+      <button data-key="6" type="button">6</button>
+      <button data-key="7" type="button">7</button>
+      <button data-key="8" type="button">8</button>
+      <button data-key="9" type="button">9</button>
+      <button data-key="0" type="button">0</button>
+      <button data-key="back" class="key-back" type="button">←</button>
     </div>
   </section>
 
@@ -96,6 +105,7 @@
       <h2>休憩中</h2>
       <p>少し休んで、後半に備えましょう。</p>
       <div class="break-timer" id="break-timer">01:00</div>
+      <button id="btn-quit-break" class="btn-quit" type="button">ホームに戻る</button>
     </div>
   </section>
 
@@ -117,7 +127,7 @@
       </div>
 
       <div class="result-actions">
-        <button id="btn-retry" class="btn-primary">もう一度挑戦する</button>
+        <button id="btn-retry" class="btn-primary" type="button">もう一度挑戦する</button>
       </div>
     </div>
   </section>
